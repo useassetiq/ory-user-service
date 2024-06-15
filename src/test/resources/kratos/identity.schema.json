@@ -1,0 +1,72 @@
+{
+  "$id": "https://example.com/schemas/user-identity.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User Identity",
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "title": "Email",
+          "minLength": 3,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              },
+              "totp": {
+                "account_name": true
+              },
+              "webauthn": {
+                "identifier": true
+              }
+            },
+            "verification": {
+              "via": "email"
+            },
+            "recovery": {
+              "via": "email"
+            }
+          }
+        },
+        "firstName": {
+          "title": "First Name",
+          "type": "string"
+        },
+        "lastName": {
+          "title": "Last Name",
+          "type": "string"
+        },
+        "consents": {
+          "type": "object",
+          "properties": {
+            "newsletter": {
+              "type": "boolean",
+              "title": "Subscribe to newsletter"
+            },
+            "terms": {
+              "type": "boolean",
+              "title": "Accept terms and conditions"
+            },
+            "privacy": {
+              "type": "boolean",
+              "title": "Accept privacy policy"
+            },
+            "marketing": {
+              "type": "boolean",
+              "title": "Allow marketing"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "email", "firstName", "lastName"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
