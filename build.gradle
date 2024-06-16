@@ -1,118 +1,118 @@
 plugins {
-	id 'java'
-	id 'groovy'
-	alias(libs.plugins.spring.boot)
-	alias(libs.plugins.spring.dependency.management)
-	alias(libs.plugins.graalvmBuildTool)
-	alias(libs.plugins.spotless)
+    id 'java'
+    id 'groovy'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.graalvmBuildTool)
+    alias(libs.plugins.spotless)
 }
 
 group = 'com.assetiq'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	set('springCloudVersion', "2023.0.2")
+    set('springCloudVersion', "2023.0.2")
 }
 
 dependencies {
-	annotationProcessor libs.lombok
+    annotationProcessor libs.lombok
 
-	compileOnly libs.lombok
-	implementation libs.vavr
+    compileOnly libs.lombok
+    implementation libs.vavr
 
-	implementation(libs.ory.kratos.client) {
-		exclude group: 'org.json', module: 'json'
-		because('Kratos client library contains vulnerability with version of org.json')
+    implementation(libs.ory.kratos.client) {
+        exclude group: 'org.json', module: 'json'
+        because('Kratos client library contains vulnerability with version of org.json')
 
-		exclude group: 'com.squareup.okio', module: 'okio'
-		because('Kratos client library contains vulnerability with version of okio')
-	}
+        exclude group: 'com.squareup.okio', module: 'okio'
+        because('Kratos client library contains vulnerability with version of okio')
+    }
 
-	implementation( 'com.squareup.okio:okio:3.9.0') {
-		because('Okio library from Ory Kratos client library contains vulnerability with version of okios')
-	}
+    implementation( 'com.squareup.okio:okio:3.9.0') {
+        because('Okio library from Ory Kratos client library contains vulnerability with version of okios')
+    }
 
-	implementation libs.square.okio
+    implementation libs.square.okio
 
-	implementation 'org.json:json:20240205'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
-	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	implementation 'org.springframework.session:spring-session-core'
-	implementation libs.square.okhttp3
-	implementation 'io.micrometer:micrometer-core'
-	runtimeOnly libs.micrometer.registry.prometheus
+    implementation 'org.json:json:20240205'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springframework.session:spring-session-core'
+    implementation libs.square.okhttp3
+    implementation 'io.micrometer:micrometer-core'
+    runtimeOnly libs.micrometer.registry.prometheus
 
-	testImplementation libs.bundles.spock.boot.container.test
+    testImplementation libs.bundles.spock.boot.container.test
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 spotless {
-	java {
-		target fileTree('.') {
-			include '**/*.java'
-			exclude '**/build/**', '**/build-*/**'
-		}
-		toggleOffOn()
-		removeUnusedImports()
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
-	groovyGradle {
-		target fileTree('.') {
-			include '**/*.gradle'
-			exclude '**/build/**', '**/build-*/**'
-		}
-		greclipse()
-		indentWithSpaces(4)
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
-	format 'xml', {
-		target fileTree('.') {
-			include '**/*.xml'
-			exclude '**/build/**', '**/build-*/**'
-		}
-		eclipseWtp('xml')
-		trimTrailingWhitespace()
-		indentWithSpaces(2)
-		endWithNewline()
-	}
-	format 'misc', {
-		target fileTree('.') {
-			include '**/*.md', '**/.gitignore'
-			exclude '**/build/**', '**/build-*/**'
-		}
-		trimTrailingWhitespace()
-		indentWithSpaces(2)
-		endWithNewline()
-	}
+    java {
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        toggleOffOn()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'xml', {
+        target fileTree('.') {
+            include '**/*.xml'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        eclipseWtp('xml')
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+    format 'misc', {
+        target fileTree('.') {
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
 }
