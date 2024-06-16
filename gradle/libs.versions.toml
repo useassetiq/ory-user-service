@@ -18,6 +18,7 @@ ory = "1.1.0"
 okhttp3 = "4.12.0"
 okio = "3.0.0"
 micrometer-registry-prometheus = "1.9.5"
+spotless = "7.0.0.BETA1"
 
 [libraries]
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
@@ -48,3 +49,4 @@ spock-test = ["groovy", "spock-core"]
 spring-dependency-management = { id = 'io.spring.dependency-management', version.ref = 'springDependencies' }
 spring-boot = { id = 'org.springframework.boot', version.ref = 'springboot' }
 graalvmBuildTool = { id = "org.graalvm.buildtools.native", version.ref = "graalvm" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

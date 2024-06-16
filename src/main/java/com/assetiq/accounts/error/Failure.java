@@ -1,11 +1,9 @@
 package com.assetiq.accounts.error;
 
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@RequiredArgsConstructor
-public class Failure {
-    private final String message;
-   private final String code;
+@JsonInclude(JsonInclude.Include.NON_NULL)
 
-   private final Throwable cause;
+public record Failure(String message, String code, @JsonIgnore Throwable cause) {
 }

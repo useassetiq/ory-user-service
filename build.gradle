@@ -4,6 +4,7 @@ plugins {
 	alias(libs.plugins.spring.boot)
 	alias(libs.plugins.spring.dependency.management)
 	alias(libs.plugins.graalvmBuildTool)
+	alias(libs.plugins.spotless)
 }
 
 group = 'com.assetiq'
@@ -72,4 +73,46 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+spotless {
+	java {
+		target fileTree('.') {
+			include '**/*.java'
+			exclude '**/build/**', '**/build-*/**'
+		}
+		toggleOffOn()
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	groovyGradle {
+		target fileTree('.') {
+			include '**/*.gradle'
+			exclude '**/build/**', '**/build-*/**'
+		}
+		greclipse()
+		indentWithSpaces(4)
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	format 'xml', {
+		target fileTree('.') {
+			include '**/*.xml'
+			exclude '**/build/**', '**/build-*/**'
+		}
+		eclipseWtp('xml')
+		trimTrailingWhitespace()
+		indentWithSpaces(2)
+		endWithNewline()
+	}
+	format 'misc', {
+		target fileTree('.') {
+			include '**/*.md', '**/.gitignore'
+			exclude '**/build/**', '**/build-*/**'
+		}
+		trimTrailingWhitespace()
+		indentWithSpaces(2)
+		endWithNewline()
+	}
 }

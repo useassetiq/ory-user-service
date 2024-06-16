@@ -8,7 +8,7 @@ import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sh.ory.kratos.ApiResponse;
+import sh.ory.kratos.ApiException;
 import sh.ory.kratos.api.IdentityApi;
 import sh.ory.kratos.model.Identity;
 import sh.ory.kratos.model.UpdateIdentityBody;
@@ -27,19 +27,25 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public Optional<Failure> putUserProfile(String userId, UserProfile userProfile) {
-        return Try.of(() -> identityApi.getIdentityWithHttpInfo(userId, List.of()))
+        return Try.of(() -> identityApi.getIdentity(userId, List.of()))
                 .onFailure(throwable -> log.error("Failed to get identity with id {}", userId, throwable))
                 .toEither()
-                .fold(
-                        throwable -> Optional.of(new Failure("Failed to get identity with id " + userId, "error_getting_identity", throwable)),
-                        identity -> updateIdentity(userId, identity, userProfile));
+                .mapLeft(throwable -> mapFailure(userId, throwable))
+                .fold(Optional::of, identity -> updateIdentity(identity, userProfile));
     }
 
-    private Optional<Failure> updateIdentity(String userId, ApiResponse<Identity> response, UserProfile userProfile) {
-        if (response.getStatusCode() == 404) {
-            return Optional.of( new Failure("Identity with id %s not found".formatted(userId), "identity_not_found", null));
+    private Failure mapFailure(String userId, Throwable throwable) {
+        if (throwable instanceof ApiException exception) {
+            if (exception.getCode() == 404) {
+                return new Failure("Identity with id '" + userId + "' not found", "identity_not_found", null);
+            }
         }
-        Identity identity = response.getData();
+
+        return new Failure("Failed to get identity with id " + userId, "error_getting_identity", throwable);
+    }
+
+    private Optional<Failure> updateIdentity( Identity identity, UserProfile userProfile) {
+
 
         Map<String, Object> publicMetadata = mergeMaps(objectMapper.convertValue(userProfile, new TypeReference<>() {}), objectMapper.convertValue(identity, new TypeReference<>() {}));
         UpdateIdentityBody updateIdentityBody =   new UpdateIdentityBody();
