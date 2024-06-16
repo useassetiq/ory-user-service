@@ -6,74 +6,44 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Valid
-public record UserProfile (
-
+public record UserProfile(
         String username,
-
-        @GenderValidation
-        Gender gender,
-
-        @ValidAge
-        LocalDate dateOfBirth,
-
+        @GenderValidation Gender gender,
+        @ValidAge LocalDate dateOfBirth,
         List<@NotEmpty PhoneNumber> phoneNumber,
-
-        Address address){
-
+        Address address) {
 
     @Valid
     public record PhoneNumber(
-            @NotBlank
-            String countryCode,
+            @NotBlank String countryCode, @NotBlank String number, String extension, @NotNull PhoneNumberType type) {
 
-            @NotBlank
-            String number,
-
-            String extension,
-
-            @NotNull
-            PhoneNumberType type
-    ) {
         enum PhoneNumberType {
-            HOME, WORK, MOBILE
+            HOME,
+            WORK,
+            MOBILE
         }
     }
 
     public record Address(
-            @NotBlank
-            String addressLine1,
-
+            @NotBlank String addressLine1,
             String addressLine2,
-
             String addressLine3,
-
-            @NotBlank
-            String city,
-
-            @NotBlank
-            String province,
-
-            @NotBlank
-            String country,
-
-            @NotBlank
-            String zipCode
-    ) {}
+            @NotBlank String city,
+            @NotBlank String province,
+            @NotBlank String country,
+            @NotBlank String zipCode) {}
 
     @Valid
-    public record Gender(
-            @NotNull
-            GenderType type,
-            String description
-    ) {
+    public record Gender(@NotNull GenderType type, String description) {
 
         public enum GenderType {
-            MALE, FEMALE, OTHER
+            MALE,
+            FEMALE,
+            OTHER
         }
     }
 }

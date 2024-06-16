@@ -1,6 +1,5 @@
 package com.assetiq.accounts.error;
 
-
 import org.springframework.http.HttpStatus;
 
 public enum FailureCodeMapper {
@@ -8,6 +7,7 @@ public enum FailureCodeMapper {
     ;
     private final String code;
     private final HttpStatus status;
+
     FailureCodeMapper(String code, HttpStatus status) {
         this.code = code;
         this.status = status;

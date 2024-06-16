@@ -1,4 +1,9 @@
+/* (C) 2024 */
 package com.assetiq.auth_service
+
+import static org.hamcrest.Matchers.is
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 import com.assetiq.accounts.AuthServiceApplication
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,10 +16,6 @@ import sh.ory.kratos.api.IdentityApi
 import sh.ory.kratos.model.CreateIdentityBody
 import sh.ory.kratos.model.Identity
 import spock.lang.Specification
-
-import static org.hamcrest.Matchers.is
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(classes = [AuthServiceApplication.class])
 @AutoConfigureMockMvc
@@ -36,7 +37,7 @@ class AuthServiceApplicationTests extends Specification implements KratosFixture
 				"terms", false,
 				"privacy", true,
 				"marketing", true
-		)
+				)
 		Map<String, Object> traits = Map.of(
 				"email", "admin@ory.sh",
 				"firstName", "Admin",
@@ -52,7 +53,7 @@ class AuthServiceApplicationTests extends Specification implements KratosFixture
 
 	def "test put user profile"() {
 		given: "a user id and a user profile"
-			String userProfileJson = "{ \"name\": \"Test User\", \"email\": \"test@example.com\" }"
+		String userProfileJson = "{ \"name\": \"Test User\", \"email\": \"test@example.com\" }"
 
 		when: "a put request is sent to the /user-profile endpoint"
 		def result = mockMvc.perform(MockMvcRequestBuilders.put("/user-profile")
@@ -61,7 +62,7 @@ class AuthServiceApplicationTests extends Specification implements KratosFixture
 				.content(userProfileJson))
 
 		then: "the response status is 204 No Content"
-			result.andExpect(status().isNoContent())
+		result.andExpect(status().isNoContent())
 	}
 
 	def "test for user not found"() {
@@ -75,8 +76,8 @@ class AuthServiceApplicationTests extends Specification implements KratosFixture
 				.content(userProfileJson))
 
 		then: "the response status is 404 No Found"
-			result.andExpect(status().isNotFound())
-			result.andExpect(jsonPath("\$.code", is("identity_not_found")))
-			result.andExpect(jsonPath("\$.message", is("Identity with id 'not_found_id' not found")))
+		result.andExpect(status().isNotFound())
+		result.andExpect(jsonPath("\$.code", is("identity_not_found")))
+		result.andExpect(jsonPath("\$.message", is("Identity with id 'not_found_id' not found")))
 	}
 }

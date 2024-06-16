@@ -8,8 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class GenderValidator implements ConstraintValidator<GenderValidation, UserProfile.Gender> {
 
     @Override
-    public void initialize(GenderValidation constraintAnnotation) {
-    }
+    public void initialize(GenderValidation constraintAnnotation) {}
 
     @Override
     public boolean isValid(UserProfile.Gender gender, ConstraintValidatorContext context) {

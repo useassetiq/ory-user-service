@@ -5,6 +5,10 @@ import com.assetiq.accounts.model.UserProfile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.control.Try;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,11 +16,6 @@ import sh.ory.kratos.ApiException;
 import sh.ory.kratos.api.IdentityApi;
 import sh.ory.kratos.model.Identity;
 import sh.ory.kratos.model.UpdateIdentityBody;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -44,23 +43,27 @@ public class UserProfileServiceImpl implements UserProfileService {
         return new Failure("Failed to get identity with id " + userId, "error_getting_identity", throwable);
     }
 
-    private Optional<Failure> updateIdentity( Identity identity, UserProfile userProfile) {
+    private Optional<Failure> updateIdentity(Identity identity, UserProfile userProfile) {
 
-
-        Map<String, Object> publicMetadata = mergeMaps(objectMapper.convertValue(userProfile, new TypeReference<>() {}), objectMapper.convertValue(identity, new TypeReference<>() {}));
-        UpdateIdentityBody updateIdentityBody =   new UpdateIdentityBody();
+        Map<String, Object> publicMetadata = mergeMaps(
+                objectMapper.convertValue(userProfile, new TypeReference<>() {}),
+                objectMapper.convertValue(identity, new TypeReference<>() {}));
+        UpdateIdentityBody updateIdentityBody = new UpdateIdentityBody();
         updateIdentityBody.setMetadataPublic(publicMetadata);
         updateIdentityBody.setTraits(identity.getTraits());
         updateIdentityBody.setSchemaId(identity.getSchemaId());
-        updateIdentityBody.setState(UpdateIdentityBody.StateEnum.fromValue(identity.getState().getValue()));
+        updateIdentityBody.setState(
+                UpdateIdentityBody.StateEnum.fromValue(identity.getState().getValue()));
         return Try.of(() -> identityApi.updateIdentity(identity.getId(), updateIdentityBody))
                 .onFailure(throwable -> log.error("Failed to update identity with id {}", identity.getId(), throwable))
                 .toEither()
-                .mapLeft(throwable -> new Failure("Failed to update identity with id " + identity.getId(), "error_updating_identity", throwable))
+                .mapLeft(throwable -> new Failure(
+                        "Failed to update identity with id " + identity.getId(), "error_updating_identity", throwable))
                 .fold(Optional::of, ignored -> Optional.empty());
     }
 
-    public static Map<String, Object> mergeMaps(Map<String, Object> existingIdentity, Map<String, Object> newInformation) {
+    public static Map<String, Object> mergeMaps(
+            Map<String, Object> existingIdentity, Map<String, Object> newInformation) {
         Map<String, Object> mergedMap = new HashMap<>(existingIdentity);
 
         for (Map.Entry<String, Object> entry : newInformation.entrySet()) {

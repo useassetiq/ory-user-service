@@ -16,9 +16,7 @@ public class IdentityApiConfig {
     }
 
     @Bean
-    public ApiClient apiClient(OkHttpClient okHttpClient,
-                               @Value("${kratos.url}") String basePath) {
-        return new ApiClient(okHttpClient)
-                .setBasePath(basePath);
+    public ApiClient apiClient(OkHttpClient okHttpClient, @Value("${kratos.url}") String basePath) {
+        return new ApiClient(okHttpClient).setBasePath(basePath);
     }
 }
