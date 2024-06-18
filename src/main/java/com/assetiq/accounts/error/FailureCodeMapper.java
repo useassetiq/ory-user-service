@@ -11,6 +11,7 @@ public enum FailureCodeMapper {
 
     @Getter
     private final String code;
+
     private final HttpStatus status;
 
     FailureCodeMapper(String code, HttpStatus status) {
