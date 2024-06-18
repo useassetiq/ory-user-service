@@ -1,5 +1,5 @@
 
-name: Push to docker registry
+name: Build and Push to docker registry
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     env:
       REGISTRY: 752842226506.dkr.ecr.eu-west-2.amazonaws.com
       REGION: eu-west-2
-      IMAGE_NAME: everything
+      IMAGE_NAME: user-service
       GITHUB_ACTOR: ${{ github.actor }}
       GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
@@ -39,7 +39,7 @@ jobs:
           echo $GITHUB_TOKEN | docker login ghcr.io --username Elmanuel1 --password-stdin
           docker build -t user-service .
           
-          docker tag everything ghcr.io/useassetiq/user-service:${{ github.sha }}
+          docker tag user-service ghcr.io/useassetiq/user-service:${{ github.sha }}
           docker push ghcr.io/useassetiq/user-service:${{ github.sha }}
         env:
           GITHUB_ACTOR: ${{ github.actor }}
