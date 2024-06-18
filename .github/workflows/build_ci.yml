@@ -37,7 +37,6 @@ jobs:
       - name: Log in to the Container registry
         run: |
           echo $GITHUB_TOKEN | docker login ghcr.io --username Elmanuel1 --password-stdin
-          cd services/everything
           docker build -t user-service .
           
           docker tag everything ghcr.io/useassetiq/user-service:${{ github.sha }}
