@@ -17,6 +17,13 @@ java {
 	}
 }
 
+jar {
+	manifest {
+		attributes(
+				'Main-Class': 'com.assetiq.accounts.AuthServiceApplication'
+				)
+	}
+}
 jacoco {
 	toolVersion = "0.8.11"
 	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
@@ -150,4 +157,9 @@ jacocoTestCoverageVerification {
 			}
 		}
 	}
+}
+
+
+bootJar {
+	archiveFileName = project.name + '.jar'
 }

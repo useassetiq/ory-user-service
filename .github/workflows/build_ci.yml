@@ -1,0 +1,48 @@
+
+name: Push to docker registry
+
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build-deploy:
+    env:
+      REGISTRY: 752842226506.dkr.ecr.eu-west-2.amazonaws.com
+      REGION: eu-west-2
+      IMAGE_NAME: everything
+      GITHUB_ACTOR: ${{ github.actor }}
+      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Build
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: 'build'
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      - name: Log in to the Container registry
+        run: |
+          echo $GITHUB_TOKEN | docker login ghcr.io --username Elmanuel1 --password-stdin
+          cd services/everything
+          docker build -t user-service .
+          
+          docker tag everything ghcr.io/useassetiq/user-service:${{ github.sha }}
+          docker push ghcr.io/useassetiq/user-service:${{ github.sha }}
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
