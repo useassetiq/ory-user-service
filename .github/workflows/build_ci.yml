@@ -4,7 +4,7 @@ name: Push to docker registry
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 jobs:
   build-deploy:
     env:
@@ -24,8 +24,8 @@ jobs:
         with:
           java-version: '21'
           distribution: 'zulu'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          server-id: github
+          settings-path: ${{ github.workspace }}
 
       - name: Build
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
