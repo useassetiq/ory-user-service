@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = GenderValidator.class)
-@Target({ElementType.RECORD_COMPONENT, ElementType.TYPE})
+@Target({ElementType.RECORD_COMPONENT, ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GenderValidation {
     String message() default "Gender is required";

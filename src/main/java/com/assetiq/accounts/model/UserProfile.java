@@ -2,6 +2,7 @@ package com.assetiq.accounts.model;
 
 import com.assetiq.accounts.validator.GenderValidation;
 import com.assetiq.accounts.validator.ValidAge;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,15 +10,15 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-@Valid
 public record UserProfile(
         String username,
-        @GenderValidation Gender gender,
+        @Valid Gender gender,
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         @ValidAge LocalDate dateOfBirth,
-        List<@NotEmpty PhoneNumber> phoneNumber,
-        Address address) {
+        List<@Valid PhoneNumber> phoneNumbers,
+        List<@Valid Address> addresses) {
 
-    @Valid
+
     public record PhoneNumber(
             @NotBlank String countryCode, @NotBlank String number, String extension, @NotNull PhoneNumberType type) {
 
@@ -35,9 +36,18 @@ public record UserProfile(
             @NotBlank String city,
             @NotBlank String province,
             @NotBlank String country,
-            @NotBlank String zipCode) {}
+            @NotBlank String zipCode,
+            @Valid GeoLocation geoLocation) {
 
-    @Valid
+
+        public record GeoLocation(
+                @NotNull Double latitude, @NotNull Double longitude
+        ) {
+        }
+    }
+
+
+    @GenderValidation
     public record Gender(@NotNull GenderType type, String description) {
 
         public enum GenderType {

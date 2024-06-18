@@ -1,0 +1,23 @@
+{
+  "gender": {
+    "type": "OTHER",
+    "description": "2 spirit Animal"
+  },
+  "dateOfBirth": "2003-10-15",
+  "addresses": [
+    {
+      "addressLine1": "1234, Missions Drive",
+      "city": "Kelowna",
+      "province": "British Columbia",
+      "country": "Canada",
+      "zipCode": "5liobw"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "countryCode": "+1",
+      "number": "2363383038",
+      "type": "HOME"
+    }
+  ]
+}
